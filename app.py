@@ -1,14 +1,14 @@
 import random
 import streamlit as st
-from logic_utils import check_guess, parse_guess
+from logic_utils import check_guess, parse_guess #FIX: 
 
 def get_range_for_difficulty(difficulty: str):
     if difficulty == "Easy":
         return 1, 20
     if difficulty == "Normal":
-        return 1, 100
-    if difficulty == "Hard":
         return 1, 50
+    if difficulty == "Hard":
+        return 1, 100
     return 1, 100
 
 
@@ -22,10 +22,10 @@ def update_score(current_score: int, outcome: str, attempt_number: int):
     if outcome == "Too High":
         if attempt_number % 2 == 0:
             return current_score + 5
-        return current_score - 5
+        return max(0, current_score - 5)
 
     if outcome == "Too Low":
-        return current_score - 5
+        return max(0, current_score - 5)
 
     return current_score
 
@@ -99,6 +99,8 @@ with col3:
 if new_game:
     st.session_state.attempts = 0
     st.session_state.status = "playing"
+    st.session_state.score = 0
+    st.session_state.history = []
     st.session_state.secret = random.randint(1, 100)
     st.success("New game started.")
     st.rerun()
